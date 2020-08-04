@@ -12,7 +12,6 @@ id_channel = 'put number here' # with discord in devmode(Settings/appearances) ,
 
 # Subreddits to grab posts from. Make sure to put the list in [ str(sub name), int(upvotes needed)] format
 # These values are used by reddit_bot.py as parameters for what posts to grab and print automatically in discord.
-# You can change the frequency it posts to id_channel in function my_background_task()
 sublist = [['gifs', 8000], ['aww', 9000], ['HQG', 10000]]
 
 # How often to query the subreddit for new post and post to id_channel:
