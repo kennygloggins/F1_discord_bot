@@ -11,9 +11,6 @@ import asyncio
 from config import token, id_channel, f1twit_dict, addition_commands, sublist
 
 
-# Sets what character you use in discord to send the bot commands
-BOT_PREFIX = "!"
-
 client = discord.Client()
 
 # Print's the bot's information to console when on and ready.
