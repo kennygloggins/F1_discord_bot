@@ -28,7 +28,7 @@ async def my_background_task():
     while not client.is_closed():
         for item in sublist:
             sub, title = forumal_dank(item[0], item[1])
-            [await channel.send(post_title, post) for post, post_title in zip(sub, title)]
+            [await channel.send(post_title + '\n' + post) for post, post_title in zip(sub, title)]
         await asyncio.sleep(600) # task runs every x seconds
 
 # listens for commands in chat so it can respond with tweets
