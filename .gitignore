@@ -1,0 +1,48 @@
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.db
+
+# Environments #
+################
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# File types #
+##############
+
+# Flask stuff: #
+################
+instance/
+.webassets-cache
+
+# Folders and Files #
+#####################
+/.idea/
+/__pycache__/
+/logandpass.txt
+praw.ini
+features
+file.txt
+test.py
+config.py
