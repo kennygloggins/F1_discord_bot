@@ -7,8 +7,9 @@
 from reddit_bot import forumal_dank
 import discord
 import asyncio
+from twitter_scrapy import twitter_scrape, twitter_filter
 # Check config.py and change these values
-from config import token, id_channel, f1twit_dict, addition_commands, sublist, post_frequency
+from config import token, id_channel, f1twit_dict, addition_commands, sublist, reddit_frequency, twitter_frequency
 
 
 client = discord.Client()
@@ -21,6 +22,16 @@ async def on_ready():
     print(client.user.id)
     print('------')
 
+# Loop for posting twitter feed using twitter_scrape
+async def my_background_task2():
+    await client.wait_until_ready()
+    channel = await client.fetch_channel(int(id_channel))
+    while not client.is_closed():
+        twitter_scrape()
+        links = twitter_filter()
+        [await channel.send(link) for link in links]
+        await asyncio.sleep(twitter_frequency)
+
 # Loop for posting reddit feed using formual_dank('subreddit name', #of upvotes needed)
 async def my_background_task():
     await client.wait_until_ready()
@@ -29,7 +40,8 @@ async def my_background_task():
         for item in sublist:
             sub, title = forumal_dank(item[0], item[1])
             [await channel.send(post_title + '\n' + post) for post, post_title in zip(sub, title)]
-        await asyncio.sleep(post_frequency) # task runs every x seconds
+        await asyncio.sleep(reddit_frequency) # task runs every x seconds
+
 
 # listens for commands in chat so it can respond with tweets
 @client.event
@@ -47,6 +59,6 @@ async def on_message(message):
     [await message.channel.send(addition_commands[command]) for command in addition_commands if
      message.content.find(command) != -1]
 
-
+client.loop.create_task(my_background_task2())
 client.loop.create_task(my_background_task())
 client.run(str(token))
