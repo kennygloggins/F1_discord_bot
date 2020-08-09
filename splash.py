@@ -3,23 +3,26 @@
 # File: splash.py
 # Project: F1_discord_bot
 
-#coding=utf-8
-import time
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
 
 
 options = webdriver.ChromeOptions()
 options.headless = True
 driver = webdriver.Chrome(options=options)
 
-URL = ''
+URL = 'https://stackoverflow.com/questions/15435811/what-is-pep8s-e128-continuation-line-under-indented-for-visual-indent'
 
 driver.get(URL)
 
-S = lambda X: driver.execute_script('return document.body.parentNode.scroll'+X)
-driver.set_window_size(500,1000) # May need manual adjustment S('Width'), S('Height')
+
+def S(X):
+    return driver.execute_script('return document.body.parentNode.scroll' + X)
+
+
+# May need manual adjustment S('Width'), S('Height')
+driver.set_window_size(500, 1000)
 driver.find_element_by_tag_name('body').screenshot('web_screenshot.png')
 
 driver.quit()

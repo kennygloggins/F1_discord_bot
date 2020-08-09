@@ -42,13 +42,15 @@ def calender():
     service = build('calendar', 'v3', credentials=creds)
 
     # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId=googcal, timeMin=now,
-                                        maxResults=10, singleEvents=True,
-                                        orderBy='startTime').execute()
+    events_result = service.events().list(
+        calendarId=googcal, timeMin=now,
+        maxResults=10, singleEvents=True,
+        orderBy='startTime').execute()
     events = events_result.get('items', [])
     return events
+
 
 def cal_clostest_event_info():
     events = calender()
@@ -64,7 +66,6 @@ def cal_clostest_event_info():
 
 def set_event_timer():
     time, info = cal_clostest_event_info()
-
 
 
 if __name__ == '__main__':
