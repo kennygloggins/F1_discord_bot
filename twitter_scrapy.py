@@ -7,7 +7,8 @@ import GetOldTweets3 as got
 from pymongo import MongoClient
 from config import mongserver, twitter_handles, twitter_words, count
 
-# Setting up mongoDB connection
+
+# Setup connection to mongodb collection
 server = MongoClient(mongserver)
 db = server.twitter_db
 posts = db.tweets

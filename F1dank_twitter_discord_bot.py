@@ -5,14 +5,19 @@
 
 # imports subreddit query function
 from reddit_bot import forumal_dank
+from webhook import reddit_webhook
 import discord
 import asyncio
+
+from discord import Webhook, RequestsWebhookAdapter
 from twitter_scrapy import twitter_scrape, twitter_filter
 # Check config.py and change these values
-from config import token, id_channel, f1twit_dict, addition_commands, sublist, reddit_frequency, twitter_frequency
+from config import token, id_channel, f1twit_dict, addition_commands, sublist, reddit_frequency, twitter_frequency, webhook_id_reddit, webhook_token_reddit
+
 
 
 client = discord.Client()
+webhook = Webhook.partial(webhook_id_reddit, webhook_token_reddit, adapter=RequestsWebhookAdapter())
 
 # Print's the bot's information to console when on and ready.
 @client.event
@@ -35,11 +40,13 @@ async def my_background_task2():
 # Loop for posting reddit feed using formual_dank('subreddit name', #of upvotes needed)
 async def my_background_task():
     await client.wait_until_ready()
-    channel = await client.fetch_channel(int(id_channel))
     while not client.is_closed():
         for item in sublist:
-            sub, title = forumal_dank(item[0], item[1])
-            [await channel.send(post_title + '\n' + post) for post, post_title in zip(sub, title)]
+
+            titles, posts, names = forumal_dank(item[0], item[1])
+            for title, post, name in zip(titles, posts, names):
+                data = reddit_webhook(title, post, name)
+                webhook.send(embed=data)
         await asyncio.sleep(reddit_frequency) # task runs every x seconds
 
 
@@ -59,6 +66,9 @@ async def on_message(message):
     [await message.channel.send(addition_commands[command]) for command in addition_commands if
      message.content.find(command) != -1]
 
+
+# Create loops for posting from reddit and twitter
 client.loop.create_task(my_background_task2())
 client.loop.create_task(my_background_task())
+# Start client
 client.run(str(token))
