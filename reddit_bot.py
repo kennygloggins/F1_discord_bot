@@ -46,5 +46,3 @@ def forumal_dank(sub, count):
 		new_name.append(find_name(name))
 	return new_title, new_post, new_name
 
-
-#[new_name.append(x) if a.find(name.lower()) for a in y else new_name.append('F1') for x,y in name_list.items()]

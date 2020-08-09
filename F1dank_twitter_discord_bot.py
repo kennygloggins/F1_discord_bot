@@ -8,10 +8,12 @@ from reddit_bot import forumal_dank
 from webhook import reddit_webhook
 import discord
 import asyncio
+
 from discord import Webhook, RequestsWebhookAdapter
 from twitter_scrapy import twitter_scrape, twitter_filter
 # Check config.py and change these values
 from config import token, id_channel, f1twit_dict, addition_commands, sublist, reddit_frequency, twitter_frequency, webhook_id_reddit, webhook_token_reddit
+
 
 
 client = discord.Client()
@@ -40,6 +42,7 @@ async def my_background_task():
     await client.wait_until_ready()
     while not client.is_closed():
         for item in sublist:
+
             titles, posts, names = forumal_dank(item[0], item[1])
             for title, post, name in zip(titles, posts, names):
                 data = reddit_webhook(title, post, name)
@@ -62,6 +65,7 @@ async def on_message(message):
     # Addition commands
     [await message.channel.send(addition_commands[command]) for command in addition_commands if
      message.content.find(command) != -1]
+
 
 # Create loops for posting from reddit and twitter
 client.loop.create_task(my_background_task2())
