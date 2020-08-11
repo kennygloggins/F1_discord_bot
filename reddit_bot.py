@@ -20,7 +20,7 @@ reddit = praw.Reddit('bot1')
 def find_name(fname):
 	for key, value in name_list.items():
 		for x in value:
-			if re.search(x, fname):
+			if re.search(x, fname.lower()):
 				return key
 	return 'F1'
 
@@ -38,7 +38,7 @@ def forumal_dank(sub, count):
 				pass
 			else:
 				post_id = {"post_id": post.id}
-				postdb_id = posts.insert_one(post_id).inserted_id
+				posts.insert_one(post_id).inserted_id
 				# Haven't posted before so store submission ID in database and
 				# append the title and url onto our lists
 				new_title.append(post.title)

@@ -1,5 +1,5 @@
 from discord import Webhook, RequestsWebhookAdapter, Embed, Color
-from config import webhook_id_reddit, webhook_token_reddit, team_colors
+from config import webhook_id_reddit, webhook_token_reddit, team_colors, webhook
 import re
 import discord
 

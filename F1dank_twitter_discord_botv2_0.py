@@ -6,18 +6,17 @@
 # imports subreddit query function
 from reddit_bot import forumal_dank
 from webhook import reddit_webhook
-import discord  # type: ignore[import]
+import discord
 import asyncio
 from discord import Webhook, RequestsWebhookAdapter
 from twitter_scrapy import twitter_scrape, twitter_filter
 # Check config.py and change these values
 from config import (token, id_channel, f1twit_dict, addition_commands, sublist,
-					reddit_frequency, twitter_frequency, webhook_id_reddit, webhook_token_reddit)
+					reddit_frequency, twitter_frequency, webhook_id_reddit, webhook_token_reddit, webhook)
 
-# Setup discord and webhook
+
+# Setup discord
 client = discord.Client()
-webhook = Webhook.partial(
-	webhook_id_reddit, webhook_token_reddit, adapter=RequestsWebhookAdapter())
 
 
 # Print's the bot's information to console when on and ready.
@@ -46,7 +45,8 @@ async def my_background_task():
 	while not client.is_closed():
 		for item in sublist:
 			titles, posts, names = forumal_dank(item[0], item[1])
-			for title, post, name in zip(titles, posts, names):  # uses webhooks to post
+			# Uses webhooks to post
+			for title, post, name in zip(titles, posts, names):  
 				data = reddit_webhook(title, post, name)
 				webhook.send(embed=data)
 		await asyncio.sleep(reddit_frequency)  # task runs every x seconds

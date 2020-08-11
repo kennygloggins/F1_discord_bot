@@ -38,6 +38,7 @@ instance/
 
 # Folders and Files #
 #####################
+/.vscode/
 /.idea/
 /__pycache__/
 /logandpass.txt

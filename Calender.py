@@ -4,17 +4,23 @@
 # Project: F1_discord_bot
 
 from __future__ import print_function
+import time
 import datetime
+from datetime import timedelta
 import pickle
 import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-from config import googcal
+from config import googcal, webhook, lights_out
+# from apscheduler.scheduler import Scheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
+
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
+sched = BlockingScheduler()
 
 def calender():
     """Shows basic usage of the Google Calendar API.
@@ -43,11 +49,8 @@ def calender():
 
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(
-        calendarId=googcal, timeMin=now,
-        maxResults=10, singleEvents=True,
-        orderBy='startTime').execute()
+    # print('Getting the upcoming 10 events')
+    events_result = service.events().list(calendarId=googcal, timeMin=now, maxResults=10, singleEvents=True, orderBy='startTime').execute()
     events = events_result.get('items', [])
     return events
 
@@ -60,13 +63,28 @@ def cal_clostest_event_info():
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         caldict[start] = event['summary']
-    time = [x for x in list(caldict)[0:1]]
-    return time, caldict[time]
+    # time = [x for x in list(caldict)[0:1]]
+    return start, caldict[start]
 
-
-def set_event_timer():
+def parse_time():
+    sched.remove_job(id='end')
     time, info = cal_clostest_event_info()
+    time_tmp = time.split(':')
+    minute = time_tmp[1]
+    time_tmp = time_tmp[0].split('T')
+    hour = time_tmp[1]
+    time_tmp = time_tmp[0].split('-')
+    year = time_tmp[0]
+    month = time_tmp[1]
+    day = time_tmp[2]
+    # Schedule job to run event on given date
+    sched.add_job(event, 'cron', id='tmp', year=year, month=month, day=day, hour=hour, minute=minute, args=info)
 
 
-if __name__ == '__main__':
-    cal_clostest_event_info()
+# Define the function that is to be executed
+def event(info):
+    sched.remove_job(id='tmp')
+    
+    parse_time()
+
+sched.start()
